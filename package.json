@@ -1,0 +1,23 @@
+{
+  "name": "jpack",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ysmood/jpack.git"
+  },
+  "keywords": [
+    "json",
+    "serialization"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ysmood/jpack/issues"
+  },
+  "homepage": "https://github.com/ysmood/jpack#readme"
+}
