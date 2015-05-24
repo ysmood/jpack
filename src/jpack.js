@@ -1,3 +1,4 @@
+var msgpack5 = require('msgpack5')()
 
 var Jpack = function Jpack () {
 }
@@ -49,6 +50,43 @@ Jpack.prototype.genSchema = function (obj) {
     iter(obj, schema)
 
     return schema
+}
+
+Jpack.prototype.pack = function (obj, schema) {
+
+    var iter = function (node, schema, arr) {
+        switch (schema.type) {
+        case 'array':
+            for (var i = 0; i < node.length; i++) {
+                arr.push(
+                    iter(node[i], schema.items, [])
+                )
+            }
+            break
+
+        case 'object':
+            for (key in schema.properties) {
+                arr.push(
+                    iter(node[key], schema.properties[key], [])
+                )
+            }
+            break
+
+        default:
+            return node
+        }
+
+        return arr
+    }
+
+    return msgpack5.encode(
+        iter(obj, schema, [])
+    )
+}
+
+Jpack.prototype.unpack = function (data, schema) {
+    var arr = msgpack5.decode(data)
+    return arr
 }
 
 module.exports = new Jpack
