@@ -4,6 +4,9 @@ var jpack = require('../src/jpack')
 var sample1 = {
     id: 10,
     color: 'red',
+    undefined: undefined,
+    null: null,
+    true: true,
     tags: [
         'sun', 'warm'
     ]
