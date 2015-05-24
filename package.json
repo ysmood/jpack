@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/ysmood/jpack/issues"
   },
-  "homepage": "https://github.com/ysmood/jpack#readme"
+  "homepage": "https://github.com/ysmood/jpack#readme",
+  "devDependencies": {
+    "nokit": "^0.7.6"
+  }
 }
