@@ -2,10 +2,11 @@ var kit = require('nokit')
 var jpack = require('../src/jpack')
 
 var sample1 = {
-    id: 10,
+    id: 123,
     color: 'red',
-    null: null,
+    properties: ['ok', 1],
     true: true,
+    false: false,
     tags: [
         'sun', 'warm'
     ]
@@ -20,29 +21,7 @@ var sample2 = [
     }
 ]
 
-var schema1 = {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "number"
-        },
-        "color": {
-            "type": "string"
-        },
-        "null": {
-            "type": "null"
-        },
-        "true": {
-            "type": "boolean"
-        },
-        "tags": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        }
-    }
-}
+var schema1 = jpack.genSchema(sample1)
 
 var schema2 = {
     type: 'array',
