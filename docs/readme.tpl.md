@@ -1,3 +1,7 @@
+# Overview
+
+Jpack should be language neutral. It is based on the json schema.
+
 # Encoding
 
 0. `object *` -> `array *`
