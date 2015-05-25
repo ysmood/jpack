@@ -77,10 +77,15 @@ function getType (val) {
 
 function hash (obj) {
     var str = JSON.stringify(obj)
-    var h = 65536
+
+    var l = 16
+    var h = Math.pow(2, ((len - len % 2) / 2))
+    var rollLen = l - 1
+    var mask = 0xffffffff >>> (32 - l)
     var len = str.length
+
     for (var i = 0; i < len; i++) {
-        h = ( (h << 1 | h >>> 31) & 0xffffffff ) ^ str.charCodeAt(i)
+        h = ( (h << 1 | h >>> rollLen) & mask ) ^ str.charCodeAt(i)
     }
     return h >>> 0
 }
@@ -138,5 +143,11 @@ function unpackIter (node, schema) {
     return obj
 }
 
+function encoding (arr) {
+
+}
+
+function decoding (buf) {
+}
 
 module.exports = new Jpack
