@@ -1,6 +1,64 @@
 var Jpack = function Jpack () {
 }
 
+/**
+ * Generate simple schema from a sample object. Use it
+ * if you feel boring to craft a schema by hand.
+ * @param  {Object} obj
+ * @return {Object}
+ */
+Jpack.prototype.genSchema = function (obj) {
+    var schema = schemaIter(obj, {})
+
+    schema.hash = hash(schema)
+
+    return schema
+}
+
+/**
+ * Serialize anything to a data pack.
+ * @param  {Any} obj
+ * @param  {Object} schema
+ * @return {Any}
+ */
+Jpack.prototype.pack = function (val, schema) {
+    return packIter(val, schema, [])
+}
+
+/**
+ * Deserialize the data pack to the origin value.
+ * @param  {jpack} data
+ * @param  {Object} schema
+ * @return {Any}
+ */
+Jpack.prototype.unpack = function (data, schema) {
+    return unpackIter(data, schema)
+}
+
+function schemaIter (node, schema) {
+    schema.type = getType(node)
+
+    switch (schema.type) {
+    case 'array':
+        schema.items = {}
+        schemaIter(node[0], schema.items)
+        break
+
+    case 'object':
+        schema.properties = {}
+        for (key in node) {
+            if (!node.hasOwnProperty(key))
+                continue
+
+            schema.properties[key] = {}
+            schemaIter(node[key], schema.properties[key])
+        }
+        break
+    }
+
+    return schema
+}
+
 function getType (val) {
     var type = typeof val
     switch (type) {
@@ -27,116 +85,58 @@ function hash (obj) {
     return h >>> 0
 }
 
-/**
- * Generate simple schema from a sample object. Use it
- * if you feel boring to craft a schema by hand.
- * @param  {Object} obj
- * @return {Object}
- */
-Jpack.prototype.genSchema = function (obj) {
-    var iter = function (node, schema) {
-        schema.type = getType(node)
-
-        switch (schema.type) {
-        case 'array':
-            schema.items = {}
-            iter(node[0], schema.items)
-            break
-
-        case 'object':
-            schema.properties = {}
-            for (key in node) {
-                if (!node.hasOwnProperty(key))
-                    continue
-
-                schema.properties[key] = {}
-                iter(node[key], schema.properties[key])
-            }
-            break
+function packIter (node, schema, arr) {
+    switch (schema.type) {
+    case 'array':
+        for (var i = 0; i < node.length; i++) {
+            arr.push(
+                packIter(node[i], schema.items, [])
+            )
         }
+        break
 
-        return schema
+    case 'object':
+        for (key in schema.properties) {
+            arr.push(
+                packIter(node[key], schema.properties[key], [])
+            )
+        }
+        break
+
+    default:
+        return node
     }
 
-    var schema = iter(obj, {})
-
-    schema.hash = hash(schema)
-
-    return schema
+    return arr
 }
 
-/**
- * Serialize anything to a data pack.
- * @param  {Any} obj
- * @param  {Object} schema
- * @return {Any}
- */
-Jpack.prototype.pack = function (val, schema) {
 
-    var iter = function (node, schema, arr) {
-        switch (schema.type) {
-        case 'array':
-            for (var i = 0; i < node.length; i++) {
-                arr.push(
-                    iter(node[i], schema.items, [])
-                )
-            }
-            break
-
-        case 'object':
-            for (key in schema.properties) {
-                arr.push(
-                    iter(node[key], schema.properties[key], [])
-                )
-            }
-            break
-
-        default:
-            return node
+function unpackIter (node, schema) {
+    switch (schema.type) {
+    case 'array':
+        var obj = []
+        for (var i = 0; i < node.length; i++) {
+            obj.push(
+                unpackIter(node[i], schema.items)
+            )
         }
+        break
 
-        return arr
+    case 'object':
+        var i = 0,
+            obj = {}
+        for (key in schema.properties) {
+            obj[key] =
+                unpackIter(node[i++], schema.properties[key])
+        }
+        break
+
+    default:
+        return node
     }
 
-    return iter(val, schema, [])
+    return obj
 }
 
-/**
- * Deserialize the data pack to the origin value.
- * @param  {jpack} data
- * @param  {Object} schema
- * @return {Any}
- */
-Jpack.prototype.unpack = function (data, schema) {
-
-    var iter = function (node, schema) {
-        switch (schema.type) {
-        case 'array':
-            var obj = []
-            for (var i = 0; i < node.length; i++) {
-                obj.push(
-                    iter(node[i], schema.items)
-                )
-            }
-            break
-
-        case 'object':
-            var i = 0,
-                obj = {}
-            for (key in schema.properties) {
-                obj[key] =
-                    iter(node[i++], schema.properties[key])
-            }
-            break
-
-        default:
-            return node
-        }
-
-        return obj
-    }
-
-    return iter(data, schema)
-}
 
 module.exports = new Jpack
