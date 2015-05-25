@@ -1,5 +1,3 @@
-var msgpack5 = require('msgpack5')()
-
 var Jpack = function Jpack () {
 }
 
@@ -19,6 +17,16 @@ function getType (val) {
     }
 }
 
+function hash (obj) {
+    var str = JSON.stringify(obj)
+    var h = 65536
+    var len = str.length
+    for (var i = 0; i < len; i++) {
+        h = ( (h << 1 | h >>> 31) & 0xffffffff ) ^ str.charCodeAt(i)
+    }
+    return h >>> 0
+}
+
 /**
  * Generate simple schema from a sample object. Use it
  * if you feel boring to craft a schema by hand.
@@ -26,8 +34,6 @@ function getType (val) {
  * @return {Object}
  */
 Jpack.prototype.genSchema = function (obj) {
-    var schema = {}
-
     var iter = function (node, schema) {
         schema.type = getType(node)
 
@@ -40,19 +46,32 @@ Jpack.prototype.genSchema = function (obj) {
         case 'object':
             schema.properties = {}
             for (key in node) {
+                if (!node.hasOwnProperty(key))
+                    continue
+
                 schema.properties[key] = {}
                 iter(node[key], schema.properties[key])
             }
             break
         }
+
+        return schema
     }
 
-    iter(obj, schema)
+    var schema = iter(obj, {})
+
+    schema.hash = hash(schema)
 
     return schema
 }
 
-Jpack.prototype.pack = function (obj, schema) {
+/**
+ * Serialize anything to a data pack.
+ * @param  {Any} obj
+ * @param  {Object} schema
+ * @return {Any}
+ */
+Jpack.prototype.pack = function (val, schema) {
 
     var iter = function (node, schema, arr) {
         switch (schema.type) {
@@ -79,14 +98,45 @@ Jpack.prototype.pack = function (obj, schema) {
         return arr
     }
 
-    return msgpack5.encode(
-        iter(obj, schema, [])
-    )
+    return iter(val, schema, [])
 }
 
+/**
+ * Deserialize the data pack to the origin value.
+ * @param  {jpack} data
+ * @param  {Object} schema
+ * @return {Any}
+ */
 Jpack.prototype.unpack = function (data, schema) {
-    var arr = msgpack5.decode(data)
-    return arr
+
+    var iter = function (node, schema) {
+        switch (schema.type) {
+        case 'array':
+            var obj = []
+            for (var i = 0; i < node.length; i++) {
+                obj.push(
+                    iter(node[i], schema.items)
+                )
+            }
+            break
+
+        case 'object':
+            var i = 0,
+                obj = {}
+            for (key in schema.properties) {
+                obj[key] =
+                    iter(node[i++], schema.properties[key])
+            }
+            break
+
+        default:
+            return node
+        }
+
+        return obj
+    }
+
+    return iter(data, schema)
 }
 
 module.exports = new Jpack
