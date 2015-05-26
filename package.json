@@ -2,7 +2,7 @@
   "name": "jpack",
   "version": "0.0.1",
   "description": "",
-  "main": "main.js",
+  "main": "src/jpack.js",
   "scripts": {
     "test": "no test",
     "prepublish": "no build --all"
