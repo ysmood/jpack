@@ -66,8 +66,10 @@
         case 'object':
             if (val === null) {
                 return 'null'
-            } else if (val.constructor === Array) {
+            } else if (val instanceof Array) {
                 return 'array'
+            } else if (val instanceof Date) {
+                return 'date'
             } else {
                 return 'object'
             }
@@ -96,6 +98,8 @@
         case 'array':
             for (var i = 0; i < node.length; i++) {
                 arr.push(
+                    // Every item should be same typed,
+                    // so we only have to get the first one's type.
                     packIter(node[i], schema.items, [])
                 )
             }
@@ -108,6 +112,9 @@
                 )
             }
             break
+
+        case 'date':
+            return node.getTime()
 
         default:
             return node
@@ -136,6 +143,9 @@
             }
             break
 
+        case 'date':
+            return new Date(node)
+
         default:
             return node
         }
@@ -147,12 +157,17 @@
      * Encoding an array into a binary buffer.
      * @param  {Array} arr It only contains
      * `Array`, `String`, `Number`, `Boolean` and `null`.
-     * @return {}
+     * @return {Uint8Array}
      */
     function encoding (arr) {
 
     }
 
+    /**
+     * Decoding a buffer to an array.
+     * @param  {Uint8Array} buf
+     * @return {Array}
+     */
     function decoding (buf) {
     }
 

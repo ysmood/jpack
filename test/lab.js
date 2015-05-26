@@ -7,6 +7,7 @@ var sample1 = {
     otherThings: ['ok', 1],
     true: true,
     false: false,
+    date: new Date,
     tags: [
         'sun', 'warm'
     ]
@@ -17,5 +18,7 @@ var schema1 = jpack.genSchema(sample1)
 kit.log(schema1)
 
 var packed = jpack.pack(sample1, schema1)
+
+kit.log(packed)
 
 kit.log(jpack.unpack(packed, schema1))
