@@ -22,3 +22,34 @@ var packed = jpack.pack(sample1, schema1)
 kit.log(packed)
 
 kit.log(jpack.unpack(packed, schema1))
+
+var Size = function Size (w, h) {
+    this.w = w
+    this.h = h
+}
+Size.prototype.area = function () {
+    return this.w * this.h
+}
+
+jpack.types['Size'] = {
+    serialize: function (s) {
+        return [s.w, s.h]
+    },
+    parse: function (s) {
+        return new Size(s[0], s[1])
+    }
+}
+
+console.log(Size.name) // => "Size"
+
+var obj = {
+    'a': new Size(1, 2)
+}
+
+var schema = jpack.genSchema(obj)
+
+jpack.pack(obj, schema)
+
+kit.log(
+    jpack.unpack(jpack.pack(obj, schema), schema).a.area()
+)

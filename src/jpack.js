@@ -7,19 +7,38 @@
         /**
          * User can use it to extend the data type that jpack supports.
          * @type {Object} Each type should implement two
-         * functions. One is `serialize`: `(val) ->  String | Number | Boolean | Null`.
+         * functions. One is `serialize`: `(val) -> String | Number | Boolean | SimpleArray | null`.
          * Another one is `parse`: `(val) -> any`.
+         * Jpack itself use it to support `Date` type.
          * @example
-         * This will let jpack support `Date` type.
+         * This will let jpack support custom type `Size`.
          * ```javascript
-         * jpack.types['Date'] = {
-         *     serialize: function (val) {
-         *         return val.getTime()
+         * var Size = function Size (w, h) {
+         *     this.w = w
+         *     this.h = h
+         * }
+         * Size.prototype.area = function () {
+         *     return this.w * this.h
+         * }
+         *
+         * jpack.types['Size'] = {
+         *     serialize: function (s) {
+         *         return [s.w, s.h]
          *     },
-         *     parse: function (val) {
-         *         return new Date(val)
+         *     parse: function (s) {
+         *         return new Size(s[0], s[1])
          *     }
          * }
+         *
+         * console.log(Size.name) // => "Size"
+         *
+         * var obj = {
+         *     'a': new Size(1, 2)
+         * }
+         *
+         * var schema = jpack.genSchema(obj)
+         *
+         * jpack.pack(obj, schema)
          * ```
          */
         self.types = {
