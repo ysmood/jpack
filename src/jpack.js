@@ -9,6 +9,7 @@
          * @type {Object} Each type should implement two
          * functions. One is `serialize`: `(val) -> String | Number | Boolean | SimpleArray | null`.
          * Another one is `parse`: `(val) -> any`.
+         * `SimpleArray` is an array that only contains `String`, `Number`, `Boolean`, `SimpleArray` or `null`.
          * Jpack itself use it to support `Date` type.
          * @example
          * This will let jpack support custom type `Size`.
