@@ -2,9 +2,9 @@
   "name": "jpack",
   "version": "0.0.1",
   "description": "",
-  "main": "main.js",
+  "main": "src/jpack.js",
   "scripts": {
-    "test": "npm test"
+    "test": "node ./test/lab.js"
   },
   "repository": {
     "type": "git",
