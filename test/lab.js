@@ -4,7 +4,7 @@ var jpack = require('../src/jpack')
 var sample1 = {
     id: 123,
     color: 'red',
-    otherThings: ['ok', 1],
+    otherThings: ['ok', 1, new Date],
     true: true,
     false: false,
     tags: [

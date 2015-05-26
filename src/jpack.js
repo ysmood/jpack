@@ -41,8 +41,16 @@
 
         switch (schema.type) {
         case 'array':
-            schema.items = {}
-            schemaIter(node[0], schema.items)
+            schema.items = []
+            var arrLen = node.length;
+            do {
+                schema.items.push({});
+                arrLen--;
+            } while(arrLen > 0)
+            for (i in node)
+            {
+                schemaIter(node[i], schema.items[i])
+            }
             break
 
         case 'object':
@@ -54,6 +62,10 @@
                 schema.properties[key] = {}
                 schemaIter(node[key], schema.properties[key])
             }
+            break
+
+        default:
+            schema.value = node;
             break
         }
 
@@ -68,6 +80,8 @@
                 return 'null'
             } else if (val.constructor === Array) {
                 return 'array'
+            } else if (val.constructor === Date ) {
+                return 'date'
             } else {
                 return 'object'
             }
