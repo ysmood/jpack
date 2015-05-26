@@ -2,14 +2,47 @@
     var Jpack = function Jpack () {
         self = this
 
-        /**************************** Public *************************************/
+        // **************************** Public *************************************
+
+        /**
+         * Generate simple schema from a sample object. Use it
+         * if you feel boring to craft a schema by hand.
+         * @param  {Object} obj
+         * @return {Object}
+         */
+        self.genSchema = function (obj) {
+            var schema = schemaIter(obj, {})
+
+            schema.hash = hash(schema)
+
+            return schema
+        }
+
+        /**
+         * Serialize anything to a data pack.
+         * @param  {Any} obj
+         * @param  {Object} schema
+         * @return {Any}
+         */
+        self.pack = function (val, schema) {
+            return packIter(val, schema, [])
+        }
+
+        /**
+         * Deserialize the data pack to the origin value.
+         * @param  {jpack} data
+         * @param  {Object} schema
+         * @return {Any}
+         */
+        self.unpack = function (data, schema) {
+            return unpackIter(data, schema)
+        }
 
         /**
          * User can use it to extend the data type that jpack supports.
          * @type {Object} Each type should implement two
          * functions. One is `serialize`: `(val) -> String | Number | Boolean | SimpleArray | null`.
          * Another one is `parse`: `(val) -> any`.
-         * `SimpleArray` is an array that only contains `String`, `Number`, `Boolean`, `SimpleArray` or `null`.
          * Jpack itself use it to support `Date` type.
          * @example
          * This will let jpack support custom type `Size`.
@@ -53,41 +86,7 @@
             }
         }
 
-        /**
-         * Generate simple schema from a sample object. Use it
-         * if you feel boring to craft a schema by hand.
-         * @param  {Object} obj
-         * @return {Object}
-         */
-        self.genSchema = function (obj) {
-            var schema = schemaIter(obj, {})
-
-            schema.hash = hash(schema)
-
-            return schema
-        }
-
-        /**
-         * Serialize anything to a data pack.
-         * @param  {Any} obj
-         * @param  {Object} schema
-         * @return {Any}
-         */
-        self.pack = function (val, schema) {
-            return packIter(val, schema, [])
-        }
-
-        /**
-         * Deserialize the data pack to the origin value.
-         * @param  {jpack} data
-         * @param  {Object} schema
-         * @return {Any}
-         */
-        self.unpack = function (data, schema) {
-            return unpackIter(data, schema)
-        }
-
-        /**************************** Private ***************************************/
+        // **************************** Private ***************************************
 
         function schemaIter (node, schema) {
             schema.type = getType(node)
@@ -216,6 +215,7 @@
         /**
          * Encoding an array into a binary buffer.
          * @param  {Array} arr It only contains
+         * @private
          * `Array`, `String`, `Number`, `Boolean` and `null`.
          * @return {Uint8Array}
          */
@@ -225,6 +225,7 @@
 
         /**
          * Decoding a buffer to an array.
+         * @private
          * @param  {Uint8Array} buf
          * @return {Array}
          */

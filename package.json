@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "no test"
+    "test": "no test",
+    "prepublish": "no build --all"
   },
   "repository": {
     "type": "git",
