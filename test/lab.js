@@ -18,4 +18,4 @@ kit.log(schema1)
 
 var packed = jpack.pack(sample1, schema1)
 
-console.log(jpack.unpack(packed, schema1))
+kit.log(jpack.unpack(packed, schema1))
