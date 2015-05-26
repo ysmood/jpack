@@ -145,8 +145,9 @@
 
     /**
      * Encoding an array into a binary buffer.
-     * @param  {[type]} arr [description]
-     * @return {[type]}     [description]
+     * @param  {Array} arr It only contains
+     * `Array`, `String`, `Number`, `Boolean` and `null`.
+     * @return {}
      */
     function encoding (arr) {
 

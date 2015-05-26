@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/ysmood/jpack#readme",
   "devDependencies": {
-    "nokit": "^0.7.6"
+    "nokit": "0.7.6"
   }
 }
