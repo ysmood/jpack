@@ -6,7 +6,7 @@ Jpack should be language neutral, extendable and fast.
 It is based on the subset of json-schema.
 
 
-# Pack Process
+# Terms
 
 ### `SimpleValue`
 
@@ -20,6 +20,9 @@ Such as `[1, 'str', [true, null]]` is a `SimpleArray`, but `[1, {a: true}]` isn'
 ### `SimpleType`
 
 It is an `SimpleValue` or `SimpleArray`.
+
+
+# Pack Process
 
 0. `Serializable` to `SimpleType`
 

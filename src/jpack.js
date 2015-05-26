@@ -22,7 +22,7 @@
          * Serialize anything to a data pack.
          * @param  {Any} obj
          * @param  {Object} schema
-         * @return {Any}
+         * @return {ArrayBuffer}
          */
         self.pack = function (val, schema) {
             return packIter(val, schema, [])
@@ -30,7 +30,7 @@
 
         /**
          * Deserialize the data pack to the origin value.
-         * @param  {jpack} data
+         * @param  {ArrayBuffer} data
          * @param  {Object} schema
          * @return {Any}
          */
@@ -39,11 +39,11 @@
         }
 
         /**
-         * User can use it to extend the data type that jpack supports.
+         * Use it to extend the data type that jpack supports.
+         * By default it implements the `Date` type.
          * @type {Object} Each type should implement two
-         * functions. One is `serialize`: `(val) -> String | Number | Boolean | SimpleArray | null`.
+         * functions. One is `serialize`: `(val) -> SimpleType`.
          * Another one is `parse`: `(val) -> any`.
-         * Jpack itself use it to support `Date` type.
          * @example
          * This will let jpack support custom type `Size`.
          * ```javascript
@@ -214,12 +214,11 @@
 
         /**
          * Encoding an array into a binary buffer.
-         * @param  {Array} arr It only contains
+         * @param  {SimpleType} spt
          * @private
-         * `Array`, `String`, `Number`, `Boolean` and `null`.
          * @return {Uint8Array}
          */
-        function encoding (arr) {
+        function encoding (spt) {
 
         }
 
@@ -227,7 +226,7 @@
          * Decoding a buffer to an array.
          * @private
          * @param  {Uint8Array} buf
-         * @return {Array}
+         * @return {SimpleType}
          */
         function decoding (buf) {
         }

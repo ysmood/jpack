@@ -6,7 +6,7 @@ Jpack should be language neutral, extendable and fast.
 It is based on the subset of json-schema.
 
 
-# Pack Process
+# Terms
 
 ### `SimpleValue`
 
@@ -20,6 +20,9 @@ Such as `[1, 'str', [true, null]]` is a `SimpleArray`, but `[1, {a: true}]` isn'
 ### `SimpleType`
 
 It is an `SimpleValue` or `SimpleArray`.
+
+
+# Pack Process
 
 0. `Serializable` to `SimpleType`
 
@@ -61,13 +64,13 @@ It will make sure the decoding schema is on the right version.
 
     - **<u>param</u>**: `schema` { _Object_ }
 
-    - **<u>return</u>**: { _Any_ }
+    - **<u>return</u>**: { _ArrayBuffer_ }
 
 - ### **[unpack(data, schema)](src/jpack.js?source#L37)**
 
     Deserialize the data pack to the origin value.
 
-    - **<u>param</u>**: `data` { _jpack_ }
+    - **<u>param</u>**: `data` { _ArrayBuffer_ }
 
     - **<u>param</u>**: `schema` { _Object_ }
 
@@ -75,14 +78,14 @@ It will make sure the decoding schema is on the right version.
 
 - ### **[types](src/jpack.js?source#L78)**
 
-    User can use it to extend the data type that jpack supports.
+    Use it to extend the data type that jpack supports.
+    By default it implements the `Date` type.
 
     - **<u>type</u>**: { _Object_ }
 
         Each type should implement two
-        functions. One is `serialize`: `(val) -> String | Number | Boolean | SimpleArray | null`.
+        functions. One is `serialize`: `(val) -> SimpleType`.
         Another one is `parse`: `(val) -> any`.
-        Jpack itself use it to support `Date` type.
 
     - **<u>example</u>**:
 
