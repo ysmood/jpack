@@ -1,6 +1,7 @@
 # Overview
 
-Jpack should be language neutral. It is based on the json schema.
+Jpack should be language neutral, extendable and fast.
+It is based on the json schema.
 
 # Encoding
 
