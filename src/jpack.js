@@ -94,6 +94,9 @@
             switch (schema.type) {
             case 'array':
                 schema.items = {}
+
+                // Every item should be same typed,
+                // so we only have to get the first one's type.
                 schemaIter(node[0], schema.items)
                 break
 
@@ -159,8 +162,6 @@
             case 'array':
                 for (var i = 0; i < node.length; i++) {
                     arr.push(
-                        // Every item should be same typed,
-                        // so we only have to get the first one's type.
                         packIter(node[i], schema.items, [])
                     )
                 }

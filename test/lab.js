@@ -5,11 +5,12 @@ var sample1 = {
     id: 123,
     color: 'red',
     otherThings: ['ok', 1],
+    null: null,
     true: true,
     false: false,
     date: new Date,
     tags: [
-        'sun', 'warm'
+        'sun', 'warm', null
     ]
 }
 
