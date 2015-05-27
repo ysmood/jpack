@@ -8,6 +8,11 @@ It is based on the subset of json-schema.
 
 # Terms
 
+### `JsonType`
+
+Same as the [json.org spec][].
+It represents one of these types: `String`, `Number`, `Boolean`, `Object`, `Array` or `null`.
+
 ### `SimpleValue`
 
 It represents one of these types: `String`, `Number`, `Boolean` or `null`.
@@ -47,22 +52,22 @@ It will make sure the decoding schema is on the right version.
 
 # API
 
-- ### **[genSchema(obj)](src/jpack.js?source#L13)**
+- ### **[genSchema(val)](src/jpack.js?source#L13)**
 
     Generate simple schema from a sample object. Use it
     if you feel boring to craft a schema by hand.
 
-    - **<u>param</u>**: `obj` { _Object_ }
+    - **<u>param</u>**: `val` { _JsonType_ }
 
-    - **<u>return</u>**: { _Object_ }
+    - **<u>return</u>**: { _JsonType_ }
 
-- ### **[pack(obj, schema)](src/jpack.js?source#L27)**
+- ### **[pack(val, schema)](src/jpack.js?source#L27)**
 
     Serialize anything to a data pack.
 
-    - **<u>param</u>**: `obj` { _Any_ }
+    - **<u>param</u>**: `val` { _JsonType_ }
 
-    - **<u>param</u>**: `schema` { _Object_ }
+    - **<u>param</u>**: `schema` { _JsonType_ }
 
     - **<u>return</u>**: { _ArrayBuffer_ }
 
@@ -72,9 +77,9 @@ It will make sure the decoding schema is on the right version.
 
     - **<u>param</u>**: `data` { _ArrayBuffer_ }
 
-    - **<u>param</u>**: `schema` { _Object_ }
+    - **<u>param</u>**: `schema` { _JsonType_ }
 
-    - **<u>return</u>**: { _Any_ }
+    - **<u>return</u>**: { _JsonType_ }
 
 - ### **[types](src/jpack.js?source#L78)**
 
@@ -119,3 +124,6 @@ It will make sure the decoding schema is on the right version.
         jpack.pack(obj, schema)
         ```
 
+
+
+[json.org spec]: http://www.json.org/

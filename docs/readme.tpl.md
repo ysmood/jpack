@@ -8,6 +8,11 @@ It is based on the subset of json-schema.
 
 # Terms
 
+### `JsonType`
+
+Same as the [json.org spec][].
+It represents one of these types: `String`, `Number`, `Boolean`, `Object`, `Array` or `null`.
+
 ### `SimpleValue`
 
 It represents one of these types: `String`, `Number`, `Boolean` or `null`.
@@ -48,3 +53,5 @@ It will make sure the decoding schema is on the right version.
 # API
 
 <%= doc['src/jpack.js'] %>
+
+[json.org spec]: http://www.json.org/

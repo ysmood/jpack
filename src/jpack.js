@@ -7,11 +7,11 @@
         /**
          * Generate simple schema from a sample object. Use it
          * if you feel boring to craft a schema by hand.
-         * @param  {Object} obj
-         * @return {Object}
+         * @param  {JsonType} val
+         * @return {JsonType}
          */
-        self.genSchema = function (obj) {
-            var schema = schemaIter(obj, {})
+        self.genSchema = function (val) {
+            var schema = schemaIter(val, {})
 
             schema.hash = hash(schema)
 
@@ -20,8 +20,8 @@
 
         /**
          * Serialize anything to a data pack.
-         * @param  {Any} obj
-         * @param  {Object} schema
+         * @param  {JsonType} val
+         * @param  {JsonType} schema
          * @return {ArrayBuffer}
          */
         self.pack = function (val, schema) {
@@ -31,8 +31,8 @@
         /**
          * Deserialize the data pack to the origin value.
          * @param  {ArrayBuffer} data
-         * @param  {Object} schema
-         * @return {Any}
+         * @param  {JsonType} schema
+         * @return {JsonType}
          */
         self.unpack = function (data, schema) {
             return unpackIter(data, schema)
@@ -112,6 +112,12 @@
             return schema
         }
 
+        /**
+         * Get the type of a value.
+         * @private
+         * @param  {JsonType} val
+         * @return {String} The type name.
+         */
         function getType (val) {
             var type = typeof val
             switch (type) {
