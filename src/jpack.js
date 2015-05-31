@@ -219,6 +219,22 @@
             return obj
         }
 
+        codeToStr = String.fromCharCode
+
+        $null = codeToStr(0)
+        $true = codeToStr(1)
+        $false = codeToStr(2)
+        $strSign = codeToStr(3)
+        $arrOpen = codeToStr(4)
+        $arrClose = codeToStr(5)
+        $arrSep = codeToStr(6)
+        $minusSign = codeToStr(7)
+        $decimalPoint = codeToStr(8)
+
+        function stringifyIter (node, str) {
+
+        }
+
         /**
          * Convert a SimpleType into a string.
          * @param  {SimpleType} spt
@@ -226,7 +242,7 @@
          * @return {String}
          */
         function stringify (spt) {
-
+            return stringifyIter(spt, '')
         }
 
         /**
