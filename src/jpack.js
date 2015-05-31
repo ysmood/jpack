@@ -220,22 +220,22 @@
         }
 
         /**
-         * Encoding an array into a binary buffer.
+         * Convert a SimpleType into a string.
          * @param  {SimpleType} spt
          * @private
-         * @return {Uint8Array}
+         * @return {String}
          */
-        function encoding (spt) {
+        function stringify (spt) {
 
         }
 
         /**
-         * Decoding a buffer to an array.
+         * Convert a string to a SimpleType.
          * @private
-         * @param  {Uint8Array} buf
+         * @param  {String} str
          * @return {SimpleType}
          */
-        function decoding (buf) {
+        function parse (str) {
         }
 
     }
