@@ -1,8 +1,9 @@
 ;(function (root) {
     var Jpack = function Jpack () {
-        self = this
 
         // **************************** Public *************************************
+
+        var self = this
 
         /**
          * Generate simple schema from a sample object. Use it
@@ -24,9 +25,7 @@
          * @param  {JsonType} schema
          * @return {ArrayBuffer}
          */
-        self.pack = function (val, schema) {
-            return packIter(val, schema, [])
-        }
+        self.pack = packIter
 
         /**
          * Deserialize the data pack to the origin value.
@@ -34,9 +33,7 @@
          * @param  {JsonType} schema
          * @return {JsonType}
          */
-        self.unpack = function (data, schema) {
-            return unpackIter(data, schema)
-        }
+        self.unpack = unpackIter
 
         /**
          * Use it to extend the data type that jpack supports.
@@ -129,7 +126,7 @@
 
                 type = val.constructor.name
 
-                if (type == 'Array') return 'array'
+                if (type === 'Array') return 'array'
 
                 if (self.types[type]) return type
 
@@ -155,25 +152,42 @@
             return h >>> 0
         }
 
-        function packIter (node, schema, arr) {
+        function numToStr (num) {
+            var str = ''
+                , s
+
+            while (num >= numBase) {
+                s = num % numBase
+                str = String.fromCharCode(s + codeIndex) + str
+                num = (num - s) / numBase
+            }
+
+            str = String.fromCharCode(num + codeIndex) + str
+
+            return str
+        }
+
+        function packIter (node, schema) {
             var type = schema.type
 
             switch (type) {
             case 'array':
+                var arr = []
                 for (var i = 0; i < node.length; i++) {
                     arr.push(
-                        packIter(node[i], schema.items, [])
+                        packIter(node[i], schema.items)
                     )
                 }
-                break
+                return arr
 
             case 'object':
+                var arr = []
                 for (key in schema.properties) {
                     arr.push(
-                        packIter(node[key], schema.properties[key], [])
+                        packIter(node[key], schema.properties[key])
                     )
                 }
-                break
+                return arr
 
             default:
                 var handler = self.types[type]
@@ -182,8 +196,6 @@
 
                 return node
             }
-
-            return arr
         }
 
         function unpackIter (node, schema) {
@@ -219,20 +231,77 @@
             return obj
         }
 
-        codeToStr = String.fromCharCode
+        function codeToStr () {
+            numBase--
+            return String.fromCharCode(codeIndex++)
+        }
 
-        $null = codeToStr(0)
-        $true = codeToStr(1)
-        $false = codeToStr(2)
-        $strSign = codeToStr(3)
-        $arrOpen = codeToStr(4)
-        $arrClose = codeToStr(5)
-        $arrSep = codeToStr(6)
-        $minusSign = codeToStr(7)
-        $decimalPoint = codeToStr(8)
+        var codeIndex = 0
+            , numBase = 128
+            , $null = codeToStr()
+            , $true = codeToStr()
+            , $false = codeToStr()
+            , $strSign = codeToStr()
+            , $arrOpen = codeToStr()
+            , $arrClose = codeToStr()
+            , $arrSep = codeToStr()
+            , $minusSign = codeToStr()
+            , $decimalPoint = codeToStr()
+            , $strSignEscape = $strSign + $strSign
+            , $strSignReg = new RegExp($strSign, 'g')
 
-        function stringifyIter (node, str) {
+        function stringifyIter (node) {
+            if (node === null) return $null
 
+            switch (typeof node) {
+            case 'boolean':
+                if (node)
+                    return $true
+                else
+                    return $false
+
+            case 'string':
+                return $strSign
+                    + node.replace($strSignReg, $strSignEscape)
+                    + $strSign
+
+            case 'number':
+                var res = ''
+                    , str = ''
+                if (node < 0) {
+                    res += $minusSign
+                    node = -node
+                }
+
+                str = node + ''
+
+                var dotIndex = str.indexOf('.')
+
+                if (dotIndex > -1) {
+                    res += numToStr(+str.slice(0, dotIndex))
+                        + $decimalPoint
+                        + numToStr(+str.slice(dotIndex + 1))
+                } else {
+                    res += numToStr(node)
+                }
+
+                return res
+
+            // In fact it can only be an array.
+            case 'object':
+                var len = node.length
+                  , lenI = len - 1
+                  , i = 0
+                  , str = ''
+                str += $arrOpen
+                for (; i < len; i++) {
+                    if (i < lenI)
+                        str += stringifyIter(node[i], str) + $arrSep
+                    else
+                        str += stringifyIter(node[i], str)
+                }
+                return str + $arrClose
+            }
         }
 
         /**
@@ -242,8 +311,11 @@
          * @return {String}
          */
         function stringify (spt) {
-            return stringifyIter(spt, '')
+            return new Buffer(stringifyIter(spt))
         }
+
+        // [10, true, [12345, [1, 2, 3], 'hello world'], 'test']
+        console.log(stringify([-1.2, 10]))
 
         /**
          * Convert a string to a SimpleType.
