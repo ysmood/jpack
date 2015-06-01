@@ -158,11 +158,11 @@
 
             while (num >= numBase) {
                 s = num % numBase
-                str = String.fromCharCode(s + codeIndex) + str
+                str = codeToStr(s + codeIndex) + str
                 num = (num - s) / numBase
             }
 
-            str = String.fromCharCode(num + codeIndex) + str
+            str = codeToStr(num + codeIndex) + str
 
             return str
         }
@@ -231,22 +231,23 @@
             return obj
         }
 
-        function codeToStr () {
+        function getSpackSymbol () {
             numBase--
-            return String.fromCharCode(codeIndex++)
+            return codeToStr(codeIndex++)
         }
 
-        var codeIndex = 0
+        var codeToStr = String.fromCharCode
+            , codeIndex = 0
             , numBase = 128
-            , $null = codeToStr()
-            , $true = codeToStr()
-            , $false = codeToStr()
-            , $strSign = codeToStr()
-            , $arrOpen = codeToStr()
-            , $arrClose = codeToStr()
-            , $arrSep = codeToStr()
-            , $minusSign = codeToStr()
-            , $decimalPoint = codeToStr()
+            , $null = getSpackSymbol()
+            , $true = getSpackSymbol()
+            , $false = getSpackSymbol()
+            , $strSign = getSpackSymbol()
+            , $arrOpen = getSpackSymbol()
+            , $arrClose = getSpackSymbol()
+            , $arrSep = getSpackSymbol()
+            , $minusSign = getSpackSymbol()
+            , $decimalPoint = getSpackSymbol()
             , $strSignEscape = $strSign + $strSign
             , $strSignReg = new RegExp($strSign, 'g')
 
@@ -263,7 +264,6 @@
             case 'string':
                 return $strSign
                     + node.replace($strSignReg, $strSignEscape)
-                    + $strSign
 
             case 'number':
                 var res = ''
