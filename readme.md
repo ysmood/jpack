@@ -1,4 +1,4 @@
-**Jpack is on its very early stage, don't make PR for it, only issue will be resolved.**
+**Jpack is on its very early stage, it's not ready for production. Don't make PR for it, only issue will be resolved.**
 
 # Overview
 
@@ -89,7 +89,7 @@ It will make sure the decoding schema is on the right version.
 
 # API
 
-- ### **[genSchema(val)](src/jpack.js?source#L13)**
+- ### **[genSchema(val)](src/jpack.js?source#L14)**
 
     Generate simple schema from a sample object. Use it
     if you feel boring to craft a schema by hand.
@@ -98,7 +98,7 @@ It will make sure the decoding schema is on the right version.
 
     - **<u>return</u>**: { _JsonType_ }
 
-- ### **[pack(val, schema)](src/jpack.js?source#L27)**
+- ### **[pack(val, schema)](src/jpack.js?source#L28)**
 
     Serialize anything to a data pack.
 
@@ -108,7 +108,7 @@ It will make sure the decoding schema is on the right version.
 
     - **<u>return</u>**: { _ArrayBuffer_ }
 
-- ### **[unpack(data, schema)](src/jpack.js?source#L37)**
+- ### **[unpack(data, schema)](src/jpack.js?source#L36)**
 
     Deserialize the data pack to the origin value.
 
@@ -118,7 +118,7 @@ It will make sure the decoding schema is on the right version.
 
     - **<u>return</u>**: { _JsonType_ }
 
-- ### **[types](src/jpack.js?source#L78)**
+- ### **[types](src/jpack.js?source#L75)**
 
     Use it to extend the data type that jpack supports.
     By default it implements the `Date` type.

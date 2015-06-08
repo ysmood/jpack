@@ -1,4 +1,4 @@
-**Jpack is on its very early stage, don't make PR for it, only issue will be resolved.**
+**Jpack is on its very early stage, it's not ready for production. Don't make PR for it, only issue will be resolved.**
 
 # Overview
 
